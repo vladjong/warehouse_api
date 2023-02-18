@@ -23,13 +23,14 @@ CREATE TABLE warehouse_product (
 
 CREATE TABLE product_reservation (
   id bigserial primary key,
-  id_warehouse_product bigserial references warehouse_product(id),
+  id_warehouse_product bigserial unique references warehouse_product(id),
   qty int not null
 );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
+
 DROP TABLE warehouse CASCADE;
 DROP TABLE product CASCADE;
 DROP TABLE product_reservation CASCADE;

@@ -6,3 +6,7 @@ type ProductInWarehouse struct {
 	WarehouseId int64  `db:"warehouse_id"`
 	QTY         int    `db:"qty"`
 }
+
+type AllProductInWarehouse struct {
+	Product []Product
+}

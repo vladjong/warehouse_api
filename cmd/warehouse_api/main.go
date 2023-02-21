@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
+	"github.com/adough/warehouse_api/internal/app"
 	"github.com/adough/warehouse_api/internal/config"
-	"github.com/adough/warehouse_api/internal/controller/api"
 	"github.com/adough/warehouse_api/internal/db"
 	"github.com/adough/warehouse_api/internal/parser/csv"
 	"github.com/adough/warehouse_api/internal/repository/postgres"
@@ -26,12 +26,17 @@ func main() {
 	}
 	log.Println("init pgx driver")
 
-	db := postgres.New(pgx)
+	repository := postgres.New(pgx)
+
+	if err := db.Migrate(cfg.DB); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("completed migrate")
 
 	parser := csv.New()
 
-	handlerWarehouse := handler.NewServie(db, parser)
+	handlerWarehouse := handler.NewServie(repository, parser)
 
-	service := api.New(db, handlerWarehouse, *cfg)
+	service := app.New(handlerWarehouse, *cfg)
 	service.Start()
 }

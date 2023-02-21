@@ -5,7 +5,7 @@ import (
 )
 
 type Product struct {
-	Id   string `json:"-" db:"id" csv:"id"`
+	Id   string `json:"id" db:"id" csv:"id"`
 	Name string `json:"name" db:"name" csv:"name"`
 	Size int    `json:"size" db:"size" csv:"size"`
 	QTY  int    `json:"qty" db:"qty" csv:"qty"`

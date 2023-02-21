@@ -1,12 +1,10 @@
-docker_run:
-	docker compose build
-	docker compose up
+all: docker
 
-docker_stop:
-	docker compose down
+docker:
+	docker compose --env-file .env up --build
 
-migrate:
-	goose postgres 'postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable' down
+clean:
+	docker compose stop
 
 test:
 	go test ./...

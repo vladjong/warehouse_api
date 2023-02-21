@@ -6,6 +6,8 @@ import (
 	"github.com/adough/warehouse_api/internal/entity"
 )
 
+//go:generate mockgen -source=interface.go -destination=mock/mock.go
+
 type Repository interface {
 	AddWarehouse(ctx context.Context, data entity.Warehouse) error
 	GetAllWarehouse(ctx context.Context) ([]entity.Warehouse, error)

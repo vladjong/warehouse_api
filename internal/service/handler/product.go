@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/adough/warehouse_api/internal/entity"
-	"github.com/google/uuid"
 )
 
 func (s *service) AddProduct(r *http.Request, data *ProductArgs, response *Response) error {
@@ -21,7 +20,6 @@ func (s *service) AddProduct(r *http.Request, data *ProductArgs, response *Respo
 			log.Printf("[service.AddProduct]:%v", err)
 			return fmt.Errorf("[service.AddProduct]:%v", err)
 		}
-		product.Id = uuid.NewString()
 		if err := s.rep.AddProduct(ctx, product); err != nil {
 			log.Printf("[service.AddProduct]:%v", err)
 			return fmt.Errorf("[service.AddProduct]:%v", err)

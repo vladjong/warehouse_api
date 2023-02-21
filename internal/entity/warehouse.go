@@ -3,7 +3,7 @@ package entity
 import "fmt"
 
 type Warehouse struct {
-	Id         int64  `json:"-" db:"id" goqu:"skipinsert" csv:"id"`
+	Id         int64  `json:"id" db:"id" goqu:"skipinsert" csv:"id"`
 	Name       string `json:"name" db:"name" csv:"name"`
 	IsAvalible bool   `json:"is_avalible" db:"is_available" csv:"is_avalible"`
 }

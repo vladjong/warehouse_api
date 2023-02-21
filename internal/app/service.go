@@ -1,4 +1,4 @@
-package api
+package app
 
 import (
 	"context"
@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/adough/warehouse_api/internal/config"
-	"github.com/adough/warehouse_api/internal/repository"
 	"github.com/adough/warehouse_api/internal/service/handler"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -19,24 +18,22 @@ import (
 	"github.com/gorilla/rpc/json"
 )
 
-type Service struct {
-	db      repository.Repository
+type App struct {
 	handler handler.Service
 	cfg     config.Config
 }
 
-func New(db repository.Repository, handler handler.Service, cfg config.Config) *Service {
-	return &Service{
-		db:      db,
+func New(handler handler.Service, cfg config.Config) *App {
+	return &App{
 		handler: handler,
 		cfg:     cfg,
 	}
 }
 
-func (s *Service) Start() {
+func (a *App) Start() {
 	server := &http.Server{
-		Addr:    fmt.Sprintf("localhost%v", s.cfg.Listen.Port),
-		Handler: s.initHandler(),
+		Addr:    fmt.Sprintf("0.0.0.0%s", a.cfg.Listen.Port),
+		Handler: a.initHandler(a.handler),
 	}
 
 	serverCtx, serverStopCtx := context.WithCancel(context.Background())
@@ -61,7 +58,7 @@ func (s *Service) Start() {
 		serverStopCtx()
 	}()
 
-	log.Println("start service")
+	log.Printf("start service at %s", server.Addr)
 
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf(err.Error())
@@ -71,13 +68,13 @@ func (s *Service) Start() {
 
 }
 
-func (s *Service) initHandler() http.Handler {
+func (a *App) initHandler(handler handler.Service) http.Handler {
 	rpcServer := rpc.NewServer()
 
 	rpcServer.RegisterCodec(json.NewCodec(), "application/json")
 	rpcServer.RegisterCodec(json.NewCodec(), "application/json;charset=UTF-8")
 
-	rpcServer.RegisterService(s.handler, "warehouse")
+	rpcServer.RegisterService(handler, "warehouse")
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)

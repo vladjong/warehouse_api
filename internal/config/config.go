@@ -14,7 +14,8 @@ const (
 )
 
 type Config struct {
-	DB *DB
+	DB     *DB
+	Listen *Listen
 }
 
 type DB struct {
@@ -22,6 +23,10 @@ type DB struct {
 	MaxOpenConns    int           `envconfig:"DATABASE_MAX_OPEN_CONNS"`
 	MaxIdleConns    int           `envconfig:"DATABASE_MAX_IDLE_CONNS"`
 	ConnMaxLifetime time.Duration `envconfig:"DATABASE_CONN_MAX_LIFETIME"`
+}
+
+type Listen struct {
+	Port string `envconfig:"PORT"`
 }
 
 func New(ctx context.Context) (*Config, error) {

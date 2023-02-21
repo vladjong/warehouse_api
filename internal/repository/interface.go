@@ -13,4 +13,6 @@ type Repository interface {
 	GetAllProduct(ctx context.Context) ([]entity.Product, error)
 	AddProductInWarehouse(ctx context.Context, data entity.ProductInWarehouse) error
 	ReservationProduct(ctx context.Context, data entity.ProductInWarehouse) error
+	GetAllProductInWarehouse(ctx context.Context, id int64) ([]entity.Product, error)
+	RealeaseOfReserve(ctx context.Context, data entity.ProductInWarehouse) error
 }

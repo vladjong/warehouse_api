@@ -8,3 +8,5 @@ docker_stop:
 migrate:
 	goose postgres 'postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable' down
 
+test:
+	go test ./...

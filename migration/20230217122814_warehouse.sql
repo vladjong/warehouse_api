@@ -27,6 +27,12 @@ CREATE TABLE product_reservation (
   qty int not null
 );
 
+CREATE INDEX product_id_in_warehouse_product ON warehouse_product(product_id);
+
+CREATE INDEX warehouse_id_in_warehouse_product ON warehouse_product(warehouse_id);
+
+CREATE INDEX warehouse_product_in_product_reservation ON product_reservation(id_warehouse_product);
+
 
 CREATE OR REPLACE FUNCTION get_cnt_qty_by_id(idd uuid)
     RETURNS int AS
@@ -59,6 +65,9 @@ EXECUTE FUNCTION check_product_in_zero();
 -- +goose Down
 -- +goose StatementBegin
 
+DROP INDEX warehouse_id_in_warehouse_product CASCADE;
+DROP INDEX product_id_in_warehouse_product CASCADE;
+DROP INDEX warehouse_product_in_product_reservation CASCADE;
 DROP TABLE warehouse CASCADE;
 DROP TABLE product CASCADE;
 DROP TABLE product_reservation CASCADE;
